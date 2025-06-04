@@ -1,0 +1,6 @@
+pre-commit:
+  commands:
+    ecs:
+      run: composer ecs
+      fail_text: "ECS found code style issues. Run 'composer ecs-fix' to fix them automatically."
+      stage_fixed: true
