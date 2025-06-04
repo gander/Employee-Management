@@ -13,8 +13,29 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('full_name');
             $table->string('email')->unique();
+            $table->string('phone')->nullable();
+            $table->decimal('average_annual_salary', 10, 2)->nullable();
+            $table->enum('position', ['front-end', 'back-end', 'pm', 'designer', 'tester']);
+
+            // Residential address
+            $table->string('residential_address_country');
+            $table->string('residential_address_postal_code');
+            $table->string('residential_address_city');
+            $table->string('residential_address_house_number');
+            $table->string('residential_address_apartment_number')->nullable();
+
+            // Correspondence address
+            $table->boolean('different_correspondence_address')->index();
+            $table->string('correspondence_address_country')->nullable();
+            $table->string('correspondence_address_postal_code')->nullable();
+            $table->string('correspondence_address_city')->nullable();
+            $table->string('correspondence_address_house_number')->nullable();
+            $table->string('correspondence_address_apartment_number')->nullable();
+
+            $table->boolean('is_active')->default(false)->index();
+
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
