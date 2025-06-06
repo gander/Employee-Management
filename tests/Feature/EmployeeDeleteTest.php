@@ -20,7 +20,7 @@ class EmployeeDeleteTest extends TestCase
         return $user;
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_delete_employee()
     {
         $this->authenticatedUser();
@@ -41,7 +41,7 @@ class EmployeeDeleteTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_deletes_employee_with_all_address_data()
     {
         $this->authenticatedUser();
@@ -71,7 +71,7 @@ class EmployeeDeleteTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_requires_authentication()
     {
         $employee = Employee::factory()->create();
@@ -85,7 +85,7 @@ class EmployeeDeleteTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_404_for_non_existent_employee()
     {
         $this->authenticatedUser();
@@ -96,7 +96,7 @@ class EmployeeDeleteTest extends TestCase
             ->assertJsonPath('message', 'Employee not found');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_correct_response_structure()
     {
         $this->authenticatedUser();
@@ -112,7 +112,7 @@ class EmployeeDeleteTest extends TestCase
             ->assertJsonCount(1);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_handles_string_id_parameter()
     {
         $this->authenticatedUser();
@@ -128,7 +128,7 @@ class EmployeeDeleteTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_deletes_inactive_employee()
     {
         $this->authenticatedUser();
@@ -147,7 +147,7 @@ class EmployeeDeleteTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_deletes_employee_with_all_position_types()
     {
         $this->authenticatedUser();
@@ -168,7 +168,7 @@ class EmployeeDeleteTest extends TestCase
         }
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_deletes_employee_completely()
     {
         $this->authenticatedUser();
@@ -197,7 +197,7 @@ class EmployeeDeleteTest extends TestCase
         $this->assertNull(Employee::find($employeeId));
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_cannot_delete_same_employee_twice()
     {
         $this->authenticatedUser();
@@ -213,7 +213,7 @@ class EmployeeDeleteTest extends TestCase
             ->assertJsonPath('message', 'Employee not found');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_deletes_employee_with_minimal_data()
     {
         $this->authenticatedUser();

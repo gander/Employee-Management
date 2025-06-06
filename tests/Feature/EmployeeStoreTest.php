@@ -20,7 +20,7 @@ class EmployeeStoreTest extends TestCase
         return $user;
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_employee_with_same_addresses()
     {
         $this->authenticatedUser();
@@ -78,7 +78,7 @@ class EmployeeStoreTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_employee_with_different_correspondence_address()
     {
         $this->authenticatedUser();
@@ -116,7 +116,7 @@ class EmployeeStoreTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_requires_authentication()
     {
         $employeeData = [
@@ -136,7 +136,7 @@ class EmployeeStoreTest extends TestCase
         $response->assertStatus(401);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_required_fields()
     {
         $this->authenticatedUser();
@@ -157,7 +157,7 @@ class EmployeeStoreTest extends TestCase
             ]);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_email_uniqueness()
     {
         $this->authenticatedUser();
@@ -183,7 +183,7 @@ class EmployeeStoreTest extends TestCase
             ->assertJsonPath('errors.email.0', 'This email address is already registered.');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_position_enum()
     {
         $this->authenticatedUser();
@@ -207,7 +207,7 @@ class EmployeeStoreTest extends TestCase
             ->assertJsonPath('errors.position.0', 'Position must be one of: front-end, back-end, pm, designer, tester.');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_password_minimum_length()
     {
         $this->authenticatedUser();
@@ -231,7 +231,7 @@ class EmployeeStoreTest extends TestCase
             ->assertJsonPath('errors.password.0', 'Password must be at least 6 characters.');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_requires_correspondence_address_when_different_is_true()
     {
         $this->authenticatedUser();
@@ -260,7 +260,7 @@ class EmployeeStoreTest extends TestCase
             ]);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_does_not_require_correspondence_address_when_different_is_false()
     {
         $this->authenticatedUser();
@@ -283,7 +283,7 @@ class EmployeeStoreTest extends TestCase
         $response->assertStatus(201);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_hashes_password_before_saving()
     {
         $this->authenticatedUser();
@@ -309,7 +309,7 @@ class EmployeeStoreTest extends TestCase
         $this->assertTrue(password_verify('password123', $employee->password));
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_defaults_is_active_to_false_when_not_provided()
     {
         $this->authenticatedUser();
@@ -333,7 +333,7 @@ class EmployeeStoreTest extends TestCase
             ->assertJsonPath('employee.is_active', false);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_average_annual_salary_format()
     {
         $this->authenticatedUser();

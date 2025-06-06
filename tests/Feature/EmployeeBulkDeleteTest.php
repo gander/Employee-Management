@@ -20,7 +20,7 @@ class EmployeeBulkDeleteTest extends TestCase
         return $user;
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_bulk_delete_multiple_employees()
     {
         $this->authenticatedUser();
@@ -42,7 +42,7 @@ class EmployeeBulkDeleteTest extends TestCase
         }
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_delete_single_employee_via_bulk_endpoint()
     {
         $this->authenticatedUser();
@@ -61,7 +61,7 @@ class EmployeeBulkDeleteTest extends TestCase
         $this->assertDatabaseMissing('employees', ['id' => $employee->id]);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_deletes_employees_with_all_address_data()
     {
         $this->authenticatedUser();
@@ -88,7 +88,7 @@ class EmployeeBulkDeleteTest extends TestCase
         }
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_requires_authentication()
     {
         $employees = Employee::factory()->count(2)->create();
@@ -105,7 +105,7 @@ class EmployeeBulkDeleteTest extends TestCase
         }
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_required_employee_ids()
     {
         $this->authenticatedUser();
@@ -117,7 +117,7 @@ class EmployeeBulkDeleteTest extends TestCase
             ->assertJsonPath('errors.employee_ids.0', 'Employee IDs are required.');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_employee_ids_is_array()
     {
         $this->authenticatedUser();
@@ -131,7 +131,7 @@ class EmployeeBulkDeleteTest extends TestCase
             ->assertJsonPath('errors.employee_ids.0', 'Employee IDs must be provided as an array.');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_minimum_one_employee_id()
     {
         $this->authenticatedUser();
@@ -145,7 +145,7 @@ class EmployeeBulkDeleteTest extends TestCase
             ->assertJsonPath('errors.employee_ids.0', 'Employee IDs are required.');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_maximum_100_employee_ids()
     {
         $this->authenticatedUser();
@@ -161,7 +161,7 @@ class EmployeeBulkDeleteTest extends TestCase
             ->assertJsonPath('errors.employee_ids.0', 'Maximum 100 employees can be deleted at once.');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_employee_ids_are_integers()
     {
         $this->authenticatedUser();
@@ -174,7 +174,7 @@ class EmployeeBulkDeleteTest extends TestCase
             ->assertJsonValidationErrors(['employee_ids.0', 'employee_ids.1']);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_employee_ids_are_positive()
     {
         $this->authenticatedUser();
@@ -187,7 +187,7 @@ class EmployeeBulkDeleteTest extends TestCase
             ->assertJsonValidationErrors(['employee_ids.0', 'employee_ids.1']);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_employee_ids_exist_in_database()
     {
         $this->authenticatedUser();
@@ -200,7 +200,7 @@ class EmployeeBulkDeleteTest extends TestCase
             ->assertJsonValidationErrors(['employee_ids.0', 'employee_ids.1']);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_handles_mixed_existing_and_non_existing_ids()
     {
         $this->authenticatedUser();
@@ -215,7 +215,7 @@ class EmployeeBulkDeleteTest extends TestCase
             ->assertJsonValidationErrors(['employee_ids.1']);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_delete_employees_with_different_positions()
     {
         $this->authenticatedUser();
@@ -239,7 +239,7 @@ class EmployeeBulkDeleteTest extends TestCase
         }
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_delete_both_active_and_inactive_employees()
     {
         $this->authenticatedUser();
@@ -260,7 +260,7 @@ class EmployeeBulkDeleteTest extends TestCase
         $this->assertDatabaseMissing('employees', ['id' => $inactiveEmployee->id]);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_correct_response_structure()
     {
         $this->authenticatedUser();
@@ -281,7 +281,7 @@ class EmployeeBulkDeleteTest extends TestCase
             ->assertJsonCount(3);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_handles_duplicate_employee_ids()
     {
         $this->authenticatedUser();
@@ -300,7 +300,7 @@ class EmployeeBulkDeleteTest extends TestCase
         $this->assertDatabaseMissing('employees', ['id' => $employee->id]);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_deletes_maximum_allowed_employees()
     {
         $this->authenticatedUser();
@@ -320,7 +320,7 @@ class EmployeeBulkDeleteTest extends TestCase
         }
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_deletes_employees_completely_with_all_data()
     {
         $this->authenticatedUser();

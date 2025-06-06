@@ -12,7 +12,7 @@ class AuthLoginTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_login_with_valid_credentials_and_active_account()
     {
         $employee = Employee::factory()->create([
@@ -49,7 +49,7 @@ class AuthLoginTest extends TestCase
         $this->assertNotEmpty($response->json('token'));
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_cannot_login_with_invalid_email()
     {
         Employee::factory()->create([
@@ -67,7 +67,7 @@ class AuthLoginTest extends TestCase
             ->assertJsonPath('message', 'Invalid credentials');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_cannot_login_with_invalid_password()
     {
         Employee::factory()->create([
@@ -85,7 +85,7 @@ class AuthLoginTest extends TestCase
             ->assertJsonPath('message', 'Invalid credentials');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_cannot_login_with_inactive_account()
     {
         Employee::factory()->create([
@@ -103,7 +103,7 @@ class AuthLoginTest extends TestCase
             ->assertJsonPath('message', 'Account is inactive. Please contact administrator.');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_required_email_field()
     {
         $response = $this->postJson('/api/auth/login', [
@@ -115,7 +115,7 @@ class AuthLoginTest extends TestCase
             ->assertJsonPath('errors.email.0', 'Email address is required.');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_email_format()
     {
         $response = $this->postJson('/api/auth/login', [
@@ -128,7 +128,7 @@ class AuthLoginTest extends TestCase
             ->assertJsonPath('errors.email.0', 'Please provide a valid email address.');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_required_password_field()
     {
         $response = $this->postJson('/api/auth/login', [
@@ -140,7 +140,7 @@ class AuthLoginTest extends TestCase
             ->assertJsonPath('errors.password.0', 'Password is required.');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_password_minimum_length()
     {
         $response = $this->postJson('/api/auth/login', [
@@ -153,7 +153,7 @@ class AuthLoginTest extends TestCase
             ->assertJsonPath('errors.password.0', 'Password must be at least 6 characters.');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_both_email_and_password_when_missing()
     {
         $response = $this->postJson('/api/auth/login', []);
@@ -162,7 +162,7 @@ class AuthLoginTest extends TestCase
             ->assertJsonValidationErrors(['email', 'password']);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_proper_employee_data_on_successful_login()
     {
         $employee = Employee::factory()->create([
@@ -192,7 +192,7 @@ class AuthLoginTest extends TestCase
         $this->assertNotNull($response->json('employee.updated_at'));
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_creates_personal_access_token_on_successful_login()
     {
         $employee = Employee::factory()->create([

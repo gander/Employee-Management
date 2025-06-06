@@ -12,7 +12,7 @@ class EmployeeListTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_list_employees()
     {
         Employee::factory()->count(5)->create();
@@ -38,7 +38,7 @@ class EmployeeListTest extends TestCase
             ->assertJsonCount(5, 'data');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_filter_employees_by_full_name()
     {
         Employee::factory()->create(['full_name' => 'John Doe']);
@@ -51,7 +51,7 @@ class EmployeeListTest extends TestCase
             ->assertJsonPath('data.0.full_name', 'John Doe');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_filter_employees_by_email()
     {
         Employee::factory()->create(['email' => 'john@example.com']);
@@ -64,7 +64,7 @@ class EmployeeListTest extends TestCase
             ->assertJsonPath('data.0.email', 'john@example.com');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_filter_employees_by_position()
     {
         Employee::factory()->create(['position' => 'front-end']);
@@ -77,7 +77,7 @@ class EmployeeListTest extends TestCase
             ->assertJsonPath('data.0.position', 'front-end');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_filter_employees_by_active_status()
     {
         Employee::factory()->create(['is_active' => true]);
@@ -90,7 +90,7 @@ class EmployeeListTest extends TestCase
             ->assertJsonPath('data.0.is_active', true);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_sort_employees_by_full_name()
     {
         Employee::factory()->create(['full_name' => 'Zoe Wilson']);
@@ -103,7 +103,7 @@ class EmployeeListTest extends TestCase
             ->assertJsonPath('data.1.full_name', 'Zoe Wilson');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_sort_employees_by_created_at_descending()
     {
         $older = Employee::factory()->create(['created_at' => now()->subDay()]);
@@ -116,7 +116,7 @@ class EmployeeListTest extends TestCase
             ->assertJsonPath('data.1.id', $older->id);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_supports_pagination()
     {
         Employee::factory()->count(20)->create();
@@ -132,7 +132,7 @@ class EmployeeListTest extends TestCase
         $this->assertCount(5, $responseData['data']);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_empty_list_when_no_employees_exist()
     {
         $response = $this->getJson('/api/employees');
@@ -141,7 +141,7 @@ class EmployeeListTest extends TestCase
             ->assertJsonCount(0, 'data');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_handles_invalid_filter_gracefully()
     {
         Employee::factory()->count(3)->create();
@@ -152,7 +152,7 @@ class EmployeeListTest extends TestCase
             ->assertJsonCount(3, 'data');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_handles_invalid_sort_gracefully()
     {
         Employee::factory()->count(3)->create();

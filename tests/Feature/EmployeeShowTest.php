@@ -20,7 +20,7 @@ class EmployeeShowTest extends TestCase
         return $user;
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_show_employee_details()
     {
         $this->authenticatedUser();
@@ -78,7 +78,7 @@ class EmployeeShowTest extends TestCase
             ->assertJsonPath('employee.is_active', true);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_show_employee_with_different_correspondence_address()
     {
         $this->authenticatedUser();
@@ -106,7 +106,7 @@ class EmployeeShowTest extends TestCase
             ->assertJsonPath('employee.correspondence_address_house_number', '22');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_shows_all_address_fields_including_nulls()
     {
         $this->authenticatedUser();
@@ -128,7 +128,7 @@ class EmployeeShowTest extends TestCase
             ->assertJsonPath('employee.correspondence_address_city', null);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_requires_authentication()
     {
         $employee = Employee::factory()->create();
@@ -138,7 +138,7 @@ class EmployeeShowTest extends TestCase
         $response->assertStatus(401);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_404_for_non_existent_employee()
     {
         $this->authenticatedUser();
@@ -149,7 +149,7 @@ class EmployeeShowTest extends TestCase
             ->assertJsonPath('message', 'Employee not found');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_employee_without_sensitive_data()
     {
         $this->authenticatedUser();
@@ -167,7 +167,7 @@ class EmployeeShowTest extends TestCase
         $this->assertArrayNotHasKey('remember_token', $responseData['employee']);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_includes_timestamps()
     {
         $this->authenticatedUser();
@@ -181,7 +181,7 @@ class EmployeeShowTest extends TestCase
             ->assertJsonPath('employee.updated_at', $employee->updated_at->toISOString());
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_correct_data_types()
     {
         $this->authenticatedUser();
@@ -205,7 +205,7 @@ class EmployeeShowTest extends TestCase
         $this->assertIsBool($employeeData['different_correspondence_address']);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_shows_inactive_employee()
     {
         $this->authenticatedUser();
@@ -220,7 +220,7 @@ class EmployeeShowTest extends TestCase
             ->assertJsonPath('employee.is_active', false);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_handles_string_id_parameter()
     {
         $this->authenticatedUser();
@@ -233,7 +233,7 @@ class EmployeeShowTest extends TestCase
             ->assertJsonPath('employee.id', $employee->id);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_employee_with_all_position_types()
     {
         $this->authenticatedUser();

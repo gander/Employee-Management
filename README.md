@@ -308,10 +308,16 @@ The project includes comprehensive automated tests and Postman collections for A
 
 **Test Coverage Summary:**
 - **AuthLoginTest** (11 tests) - Login authentication, validation, token generation
+- **AuthPasswordResetTest** (18 tests) - Password reset flow, token validation
 - **EmployeeListTest** (11 tests) - Public listing, filtering, sorting, pagination  
 - **EmployeeStoreTest** (12 tests) - Employee creation, address handling, validation
 - **EmployeeUpdateTest** (16 tests) - Employee updates, partial updates, validation
-- **Total: 50+ tests with 280+ assertions**
+- **EmployeeShowTest** (11 tests) - Employee details retrieval, authorization
+- **EmployeeDeleteTest** (11 tests) - Single employee deletion, validation
+- **EmployeeBulkDeleteTest** (18 tests) - Bulk deletion, validation, limits
+- **Total: 111 tests with 649 assertions**
+
+**Note:** All tests use modern PHPUnit attributes instead of deprecated doc-comments.
 
 ### 2. Postman API Tests
 

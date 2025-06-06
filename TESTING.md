@@ -45,7 +45,7 @@ Ten projekt zawiera kompletną suite testów w trzech kategoriach:
 ./vendor/bin/sail artisan test tests/Feature/AuthLoginTest.php
 ```
 
-**Testowane scenariusze:**
+**Testowane scenariusze (11 testów):**
 - ✅ Poprawne logowanie z aktywnymi danymi
 - ❌ Logowanie z nieaktywnymi danymi (powinno się nie udać)
 - ❌ Logowanie z nieprawidłowymi danymi
@@ -53,6 +53,12 @@ Ten projekt zawiera kompletną suite testów w trzech kategoriach:
 - ❌ Walidacja nieprawidłowego formatu email
 - ✅ Generowanie tokenu API
 - ✅ Struktura odpowiedzi JSON
+
+**Uwaga:** Wszystkie testy używają nowoczesnych atrybutów PHPUnit:
+```php
+#[\PHPUnit\Framework\Attributes\Test]
+public function it_can_login_with_valid_credentials()
+```
 
 #### EmployeeListTest.php (11 testów)
 ```bash
@@ -444,7 +450,7 @@ open coverage/index.html
 
 Ten przewodnik obejmuje wszystkie aspekty testowania aplikacji Employee Management API:
 
-- **50+ testów automatycznych PHPUnit** z pełnym pokryciem funkcjonalności
+- **111 testów automatycznych PHPUnit** z pełnym pokryciem funkcjonalności (649 asercji)
 - **33 testy Postman** z automatycznymi asercjami 
 - **Przykłady testów manualnych** z żądaniami cURL
 - **Zarządzanie danymi testowymi** z seederami i fabrykami

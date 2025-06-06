@@ -20,7 +20,7 @@ class EmployeeUpdateTest extends TestCase
         return $user;
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_update_employee_basic_information()
     {
         $this->authenticatedUser();
@@ -53,7 +53,7 @@ class EmployeeUpdateTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_update_employee_addresses()
     {
         $this->authenticatedUser();
@@ -85,7 +85,7 @@ class EmployeeUpdateTest extends TestCase
             ->assertJsonPath('employee.correspondence_address_city', 'Paris');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_disable_correspondence_address()
     {
         $this->authenticatedUser();
@@ -108,7 +108,7 @@ class EmployeeUpdateTest extends TestCase
             ->assertJsonPath('employee.correspondence_address_city', null);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_update_password()
     {
         $this->authenticatedUser();
@@ -129,7 +129,7 @@ class EmployeeUpdateTest extends TestCase
         $this->assertTrue(password_verify('newpassword123', $employee->password));
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_update_is_active_status()
     {
         $this->authenticatedUser();
@@ -146,7 +146,7 @@ class EmployeeUpdateTest extends TestCase
             ->assertJsonPath('employee.is_active', true);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_update_partial_data()
     {
         $this->authenticatedUser();
@@ -169,7 +169,7 @@ class EmployeeUpdateTest extends TestCase
             ->assertJsonPath('employee.email', 'john@example.com'); // Should remain unchanged
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_requires_authentication()
     {
         $employee = Employee::factory()->create();
@@ -181,7 +181,7 @@ class EmployeeUpdateTest extends TestCase
         $response->assertStatus(401);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_404_for_non_existent_employee()
     {
         $this->authenticatedUser();
@@ -194,7 +194,7 @@ class EmployeeUpdateTest extends TestCase
             ->assertJsonPath('message', 'Employee not found');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_email_uniqueness_excluding_current_employee()
     {
         $this->authenticatedUser();
@@ -218,7 +218,7 @@ class EmployeeUpdateTest extends TestCase
         $response->assertOk();
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_position_enum()
     {
         $this->authenticatedUser();
@@ -234,7 +234,7 @@ class EmployeeUpdateTest extends TestCase
             ->assertJsonPath('errors.position.0', 'Position must be one of: front-end, back-end, pm, designer, tester.');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_password_minimum_length()
     {
         $this->authenticatedUser();
@@ -250,7 +250,7 @@ class EmployeeUpdateTest extends TestCase
             ->assertJsonPath('errors.password.0', 'Password must be at least 6 characters.');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_requires_correspondence_address_when_different_is_true()
     {
         $this->authenticatedUser();
@@ -271,7 +271,7 @@ class EmployeeUpdateTest extends TestCase
             ]);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_does_not_require_correspondence_address_when_different_is_false()
     {
         $this->authenticatedUser();
@@ -286,7 +286,7 @@ class EmployeeUpdateTest extends TestCase
         $response->assertOk();
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_average_annual_salary_format()
     {
         $this->authenticatedUser();
@@ -301,7 +301,7 @@ class EmployeeUpdateTest extends TestCase
             ->assertJsonValidationErrors(['average_annual_salary']);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_update_all_fields_at_once()
     {
         $this->authenticatedUser();
@@ -343,7 +343,7 @@ class EmployeeUpdateTest extends TestCase
         $this->assertTrue(password_verify('newpassword123', $employee->password));
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_updated_employee_data()
     {
         $this->authenticatedUser();

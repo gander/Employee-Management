@@ -14,7 +14,7 @@ class AuthPasswordResetTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_request_password_reset_token()
     {
         $employee = Employee::factory()->create([
@@ -42,7 +42,7 @@ class AuthPasswordResetTest extends TestCase
         $this->assertEquals(64, strlen($token));
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_request_password_reset_for_inactive_employee()
     {
         $employee = Employee::factory()->create([
@@ -62,7 +62,7 @@ class AuthPasswordResetTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_email_is_required_for_forgot_password()
     {
         $response = $this->postJson('/api/auth/forgot-password', []);
@@ -72,7 +72,7 @@ class AuthPasswordResetTest extends TestCase
             ->assertJsonPath('errors.email.0', 'Email address is required.');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_email_format_for_forgot_password()
     {
         $response = $this->postJson('/api/auth/forgot-password', [
@@ -84,7 +84,7 @@ class AuthPasswordResetTest extends TestCase
             ->assertJsonPath('errors.email.0', 'Please provide a valid email address.');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_email_exists_for_forgot_password()
     {
         $response = $this->postJson('/api/auth/forgot-password', [
@@ -96,7 +96,7 @@ class AuthPasswordResetTest extends TestCase
             ->assertJsonPath('errors.email.0', 'No employee found with this email address.');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_replaces_existing_token_when_requesting_new_one()
     {
         $employee = Employee::factory()->create([
@@ -124,7 +124,7 @@ class AuthPasswordResetTest extends TestCase
         $this->assertEquals(1, $tokenCount);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_reset_password_with_valid_token()
     {
         $employee = Employee::factory()->create([
@@ -160,7 +160,7 @@ class AuthPasswordResetTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_cannot_reset_password_with_invalid_token()
     {
         $employee = Employee::factory()->create([
@@ -183,7 +183,7 @@ class AuthPasswordResetTest extends TestCase
         $this->assertTrue(Hash::check('oldpassword', $employee->password));
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_cannot_reset_password_with_no_token_record()
     {
         $employee = Employee::factory()->create([
@@ -202,7 +202,7 @@ class AuthPasswordResetTest extends TestCase
             ->assertJsonPath('message', 'Invalid or expired password reset token.');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_cannot_reset_password_with_expired_token()
     {
         $employee = Employee::factory()->create([
@@ -240,7 +240,7 @@ class AuthPasswordResetTest extends TestCase
         $this->assertTrue(Hash::check('oldpassword', $employee->password));
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_required_fields_for_reset_password()
     {
         $response = $this->postJson('/api/auth/reset-password', []);
@@ -249,7 +249,7 @@ class AuthPasswordResetTest extends TestCase
             ->assertJsonValidationErrors(['email', 'token', 'password']);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_email_format_for_reset_password()
     {
         $response = $this->postJson('/api/auth/reset-password', [
@@ -264,7 +264,7 @@ class AuthPasswordResetTest extends TestCase
             ->assertJsonPath('errors.email.0', 'Please provide a valid email address.');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_email_exists_for_reset_password()
     {
         $response = $this->postJson('/api/auth/reset-password', [
@@ -279,7 +279,7 @@ class AuthPasswordResetTest extends TestCase
             ->assertJsonPath('errors.email.0', 'No employee found with this email address.');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_password_minimum_length_for_reset()
     {
         $employee = Employee::factory()->create(['email' => 'john@example.com']);
@@ -296,7 +296,7 @@ class AuthPasswordResetTest extends TestCase
             ->assertJsonPath('errors.password.0', 'Password must be at least 6 characters long.');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_validates_password_confirmation_for_reset()
     {
         $employee = Employee::factory()->create(['email' => 'john@example.com']);
@@ -313,7 +313,7 @@ class AuthPasswordResetTest extends TestCase
             ->assertJsonPath('errors.password.0', 'Password confirmation does not match.');
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_reset_password_for_inactive_employee()
     {
         $employee = Employee::factory()->create([
@@ -344,7 +344,7 @@ class AuthPasswordResetTest extends TestCase
         $this->assertTrue(Hash::check('newpassword123', $employee->password));
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_stores_token_securely_in_database()
     {
         $employee = Employee::factory()->create(['email' => 'john@example.com']);
@@ -364,7 +364,7 @@ class AuthPasswordResetTest extends TestCase
         $this->assertTrue(Hash::check($plainToken, $tokenRecord->token));
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_correct_response_structure_for_forgot_password()
     {
         $employee = Employee::factory()->create(['email' => 'john@example.com']);
@@ -381,7 +381,7 @@ class AuthPasswordResetTest extends TestCase
             ->assertJsonCount(2);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_correct_response_structure_for_reset_password()
     {
         $employee = Employee::factory()->create(['email' => 'john@example.com']);
