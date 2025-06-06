@@ -1,5 +1,7 @@
 <?php
-
+/*
+ * Copyright (c) 2025 Adam Gąsowski
+ */
 namespace Tests\Feature;
 
 use App\Models\Employee;
@@ -22,7 +24,7 @@ class EmployeeShowTest extends TestCase
     public function it_can_show_employee_details()
     {
         $this->authenticatedUser();
-        
+
         $employee = Employee::factory()->create([
             'full_name' => 'John Doe',
             'email' => 'john.doe@example.com',
@@ -80,7 +82,7 @@ class EmployeeShowTest extends TestCase
     public function it_can_show_employee_with_different_correspondence_address()
     {
         $this->authenticatedUser();
-        
+
         $employee = Employee::factory()->create([
             'full_name' => 'Jane Smith',
             'residential_address_country' => 'Poland',
@@ -108,7 +110,7 @@ class EmployeeShowTest extends TestCase
     public function it_shows_all_address_fields_including_nulls()
     {
         $this->authenticatedUser();
-        
+
         $employee = Employee::factory()->create([
             'different_correspondence_address' => false,
             'correspondence_address_country' => null,
@@ -151,7 +153,7 @@ class EmployeeShowTest extends TestCase
     public function it_returns_employee_without_sensitive_data()
     {
         $this->authenticatedUser();
-        
+
         $employee = Employee::factory()->create([
             'password' => bcrypt('secret123'),
         ]);
@@ -159,7 +161,7 @@ class EmployeeShowTest extends TestCase
         $response = $this->getJson("/api/employees/{$employee->id}");
 
         $response->assertOk();
-        
+
         $responseData = $response->json();
         $this->assertArrayNotHasKey('password', $responseData['employee']);
         $this->assertArrayNotHasKey('remember_token', $responseData['employee']);
@@ -169,7 +171,7 @@ class EmployeeShowTest extends TestCase
     public function it_includes_timestamps()
     {
         $this->authenticatedUser();
-        
+
         $employee = Employee::factory()->create();
 
         $response = $this->getJson("/api/employees/{$employee->id}");
@@ -183,7 +185,7 @@ class EmployeeShowTest extends TestCase
     public function it_returns_correct_data_types()
     {
         $this->authenticatedUser();
-        
+
         $employee = Employee::factory()->create([
             'average_annual_salary' => 85000.75,
             'is_active' => true,
@@ -193,7 +195,7 @@ class EmployeeShowTest extends TestCase
         $response = $this->getJson("/api/employees/{$employee->id}");
 
         $response->assertOk();
-        
+
         $employeeData = $response->json('employee');
         $this->assertIsInt($employeeData['id']);
         $this->assertIsString($employeeData['full_name']);
@@ -207,7 +209,7 @@ class EmployeeShowTest extends TestCase
     public function it_shows_inactive_employee()
     {
         $this->authenticatedUser();
-        
+
         $employee = Employee::factory()->create([
             'is_active' => false,
         ]);
@@ -222,7 +224,7 @@ class EmployeeShowTest extends TestCase
     public function it_handles_string_id_parameter()
     {
         $this->authenticatedUser();
-        
+
         $employee = Employee::factory()->create();
 
         $response = $this->getJson("/api/employees/{$employee->id}");
@@ -235,14 +237,14 @@ class EmployeeShowTest extends TestCase
     public function it_returns_employee_with_all_position_types()
     {
         $this->authenticatedUser();
-        
+
         $positions = ['front-end', 'back-end', 'pm', 'designer', 'tester'];
-        
+
         foreach ($positions as $position) {
             $employee = Employee::factory()->create(['position' => $position]);
-            
+
             $response = $this->getJson("/api/employees/{$employee->id}");
-            
+
             $response->assertOk()
                 ->assertJsonPath('employee.position', $position);
         }

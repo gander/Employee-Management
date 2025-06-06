@@ -1,5 +1,7 @@
 <?php
-
+/*
+ * Copyright (c) 2025 Adam Gąsowski
+ */
 namespace Tests\Feature;
 
 use App\Models\Employee;
@@ -123,7 +125,7 @@ class EmployeeListTest extends TestCase
 
         $response->assertOk()
             ->assertJsonCount(5, 'data');
-            
+
         // Check if pagination data exists in any format
         $responseData = $response->json();
         $this->assertArrayHasKey('data', $responseData);

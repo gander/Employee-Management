@@ -1,5 +1,7 @@
 <?php
-
+/*
+ * Copyright (c) 2025 Adam Gąsowski
+ */
 namespace Tests\Feature;
 
 use App\Models\Employee;
@@ -22,7 +24,7 @@ class EmployeeUpdateTest extends TestCase
     public function it_can_update_employee_basic_information()
     {
         $this->authenticatedUser();
-        
+
         $employee = Employee::factory()->create([
             'full_name' => 'Original Name',
             'email' => 'original@example.com',
@@ -55,7 +57,7 @@ class EmployeeUpdateTest extends TestCase
     public function it_can_update_employee_addresses()
     {
         $this->authenticatedUser();
-        
+
         $employee = Employee::factory()->create([
             'residential_address_country' => 'Poland',
             'residential_address_city' => 'Warsaw',
@@ -87,7 +89,7 @@ class EmployeeUpdateTest extends TestCase
     public function it_can_disable_correspondence_address()
     {
         $this->authenticatedUser();
-        
+
         $employee = Employee::factory()->create([
             'different_correspondence_address' => true,
             'correspondence_address_country' => 'Germany',
@@ -110,7 +112,7 @@ class EmployeeUpdateTest extends TestCase
     public function it_can_update_password()
     {
         $this->authenticatedUser();
-        
+
         $employee = Employee::factory()->create([
             'password' => bcrypt('oldpassword'),
         ]);
@@ -131,7 +133,7 @@ class EmployeeUpdateTest extends TestCase
     public function it_can_update_is_active_status()
     {
         $this->authenticatedUser();
-        
+
         $employee = Employee::factory()->create(['is_active' => false]);
 
         $updateData = [
@@ -148,7 +150,7 @@ class EmployeeUpdateTest extends TestCase
     public function it_can_update_partial_data()
     {
         $this->authenticatedUser();
-        
+
         $employee = Employee::factory()->create([
             'full_name' => 'John Doe',
             'email' => 'john@example.com',
@@ -196,7 +198,7 @@ class EmployeeUpdateTest extends TestCase
     public function it_validates_email_uniqueness_excluding_current_employee()
     {
         $this->authenticatedUser();
-        
+
         $employee1 = Employee::factory()->create(['email' => 'employee1@example.com']);
         $employee2 = Employee::factory()->create(['email' => 'employee2@example.com']);
 
@@ -220,7 +222,7 @@ class EmployeeUpdateTest extends TestCase
     public function it_validates_position_enum()
     {
         $this->authenticatedUser();
-        
+
         $employee = Employee::factory()->create();
 
         $response = $this->putJson("/api/employees/{$employee->id}", [
@@ -236,7 +238,7 @@ class EmployeeUpdateTest extends TestCase
     public function it_validates_password_minimum_length()
     {
         $this->authenticatedUser();
-        
+
         $employee = Employee::factory()->create();
 
         $response = $this->putJson("/api/employees/{$employee->id}", [
@@ -252,7 +254,7 @@ class EmployeeUpdateTest extends TestCase
     public function it_requires_correspondence_address_when_different_is_true()
     {
         $this->authenticatedUser();
-        
+
         $employee = Employee::factory()->create();
 
         $response = $this->putJson("/api/employees/{$employee->id}", [
@@ -273,7 +275,7 @@ class EmployeeUpdateTest extends TestCase
     public function it_does_not_require_correspondence_address_when_different_is_false()
     {
         $this->authenticatedUser();
-        
+
         $employee = Employee::factory()->create();
 
         $response = $this->putJson("/api/employees/{$employee->id}", [
@@ -288,7 +290,7 @@ class EmployeeUpdateTest extends TestCase
     public function it_validates_average_annual_salary_format()
     {
         $this->authenticatedUser();
-        
+
         $employee = Employee::factory()->create();
 
         $response = $this->putJson("/api/employees/{$employee->id}", [
@@ -303,7 +305,7 @@ class EmployeeUpdateTest extends TestCase
     public function it_can_update_all_fields_at_once()
     {
         $this->authenticatedUser();
-        
+
         $employee = Employee::factory()->create();
 
         $updateData = [
@@ -345,7 +347,7 @@ class EmployeeUpdateTest extends TestCase
     public function it_returns_updated_employee_data()
     {
         $this->authenticatedUser();
-        
+
         $employee = Employee::factory()->create();
 
         $response = $this->putJson("/api/employees/{$employee->id}", [

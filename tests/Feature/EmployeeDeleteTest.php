@@ -1,5 +1,7 @@
 <?php
-
+/*
+ * Copyright (c) 2025 Adam Gąsowski
+ */
 namespace Tests\Feature;
 
 use App\Models\Employee;
@@ -22,7 +24,7 @@ class EmployeeDeleteTest extends TestCase
     public function it_can_delete_employee()
     {
         $this->authenticatedUser();
-        
+
         $employee = Employee::factory()->create([
             'full_name' => 'John Doe',
             'email' => 'john.doe@example.com',
@@ -43,7 +45,7 @@ class EmployeeDeleteTest extends TestCase
     public function it_deletes_employee_with_all_address_data()
     {
         $this->authenticatedUser();
-        
+
         $employee = Employee::factory()->create([
             'full_name' => 'Jane Smith',
             'residential_address_country' => 'Poland',
@@ -77,7 +79,7 @@ class EmployeeDeleteTest extends TestCase
         $response = $this->deleteJson("/api/employees/{$employee->id}");
 
         $response->assertStatus(401);
-        
+
         $this->assertDatabaseHas('employees', [
             'id' => $employee->id
         ]);
@@ -98,7 +100,7 @@ class EmployeeDeleteTest extends TestCase
     public function it_returns_correct_response_structure()
     {
         $this->authenticatedUser();
-        
+
         $employee = Employee::factory()->create();
 
         $response = $this->deleteJson("/api/employees/{$employee->id}");
@@ -114,13 +116,13 @@ class EmployeeDeleteTest extends TestCase
     public function it_handles_string_id_parameter()
     {
         $this->authenticatedUser();
-        
+
         $employee = Employee::factory()->create();
 
         $response = $this->deleteJson("/api/employees/{$employee->id}");
 
         $response->assertOk();
-        
+
         $this->assertDatabaseMissing('employees', [
             'id' => $employee->id
         ]);
@@ -130,7 +132,7 @@ class EmployeeDeleteTest extends TestCase
     public function it_deletes_inactive_employee()
     {
         $this->authenticatedUser();
-        
+
         $employee = Employee::factory()->create([
             'is_active' => false,
         ]);
@@ -149,17 +151,17 @@ class EmployeeDeleteTest extends TestCase
     public function it_deletes_employee_with_all_position_types()
     {
         $this->authenticatedUser();
-        
+
         $positions = ['front-end', 'back-end', 'pm', 'designer', 'tester'];
-        
+
         foreach ($positions as $position) {
             $employee = Employee::factory()->create(['position' => $position]);
-            
+
             $response = $this->deleteJson("/api/employees/{$employee->id}");
-            
+
             $response->assertOk()
                 ->assertJsonPath('message', 'Employee deleted successfully');
-                
+
             $this->assertDatabaseMissing('employees', [
                 'id' => $employee->id
             ]);
@@ -170,7 +172,7 @@ class EmployeeDeleteTest extends TestCase
     public function it_deletes_employee_completely()
     {
         $this->authenticatedUser();
-        
+
         $employee = Employee::factory()->create([
             'full_name' => 'Test Employee',
             'email' => 'test@example.com',
@@ -199,7 +201,7 @@ class EmployeeDeleteTest extends TestCase
     public function it_cannot_delete_same_employee_twice()
     {
         $this->authenticatedUser();
-        
+
         $employee = Employee::factory()->create();
         $employeeId = $employee->id;
 
@@ -215,7 +217,7 @@ class EmployeeDeleteTest extends TestCase
     public function it_deletes_employee_with_minimal_data()
     {
         $this->authenticatedUser();
-        
+
         $employee = Employee::factory()->create([
             'full_name' => 'Minimal Employee',
             'email' => 'minimal@example.com',

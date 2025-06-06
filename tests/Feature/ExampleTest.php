@@ -1,5 +1,7 @@
 <?php
-
+/*
+ * Copyright (c) 2025 Adam Gąsowski
+ */
 namespace Tests\Feature;
 
 // use Illuminate\Foundation\Testing\RefreshDatabase;

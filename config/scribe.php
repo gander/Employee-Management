@@ -1,5 +1,7 @@
 <?php
-
+/*
+ * Copyright (c) 2025 Adam Gąsowski
+ */
 use Knuckles\Scribe\Config\AuthIn;
 use function Knuckles\Scribe\Config\{configureStrategy, removeStrategies};
 use Knuckles\Scribe\Config\Defaults;

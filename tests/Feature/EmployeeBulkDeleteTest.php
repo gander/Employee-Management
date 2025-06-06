@@ -1,5 +1,7 @@
 <?php
-
+/*
+ * Copyright (c) 2025 Adam Gąsowski
+ */
 namespace Tests\Feature;
 
 use App\Models\Employee;
@@ -22,7 +24,7 @@ class EmployeeBulkDeleteTest extends TestCase
     public function it_can_bulk_delete_multiple_employees()
     {
         $this->authenticatedUser();
-        
+
         $employees = Employee::factory()->count(3)->create();
         $employeeIds = $employees->pluck('id')->toArray();
 
@@ -44,7 +46,7 @@ class EmployeeBulkDeleteTest extends TestCase
     public function it_can_delete_single_employee_via_bulk_endpoint()
     {
         $this->authenticatedUser();
-        
+
         $employee = Employee::factory()->create(['full_name' => 'John Doe']);
 
         $response = $this->deleteJson('/api/employees/bulk', [
@@ -63,7 +65,7 @@ class EmployeeBulkDeleteTest extends TestCase
     public function it_deletes_employees_with_all_address_data()
     {
         $this->authenticatedUser();
-        
+
         $employees = Employee::factory()->count(2)->create([
             'residential_address_country' => 'Poland',
             'residential_address_city' => 'Warsaw',
@@ -97,7 +99,7 @@ class EmployeeBulkDeleteTest extends TestCase
         ]);
 
         $response->assertStatus(401);
-        
+
         foreach ($employeeIds as $id) {
             $this->assertDatabaseHas('employees', ['id' => $id]);
         }
@@ -202,7 +204,7 @@ class EmployeeBulkDeleteTest extends TestCase
     public function it_handles_mixed_existing_and_non_existing_ids()
     {
         $this->authenticatedUser();
-        
+
         $employee = Employee::factory()->create();
 
         $response = $this->deleteJson('/api/employees/bulk', [
@@ -217,12 +219,12 @@ class EmployeeBulkDeleteTest extends TestCase
     public function it_can_delete_employees_with_different_positions()
     {
         $this->authenticatedUser();
-        
+
         $positions = ['front-end', 'back-end', 'pm', 'designer', 'tester'];
         $employees = collect($positions)->map(function ($position) {
             return Employee::factory()->create(['position' => $position]);
         });
-        
+
         $employeeIds = $employees->pluck('id')->toArray();
 
         $response = $this->deleteJson('/api/employees/bulk', [
@@ -241,10 +243,10 @@ class EmployeeBulkDeleteTest extends TestCase
     public function it_can_delete_both_active_and_inactive_employees()
     {
         $this->authenticatedUser();
-        
+
         $activeEmployee = Employee::factory()->create(['is_active' => true]);
         $inactiveEmployee = Employee::factory()->create(['is_active' => false]);
-        
+
         $employeeIds = [$activeEmployee->id, $inactiveEmployee->id];
 
         $response = $this->deleteJson('/api/employees/bulk', [
@@ -262,7 +264,7 @@ class EmployeeBulkDeleteTest extends TestCase
     public function it_returns_correct_response_structure()
     {
         $this->authenticatedUser();
-        
+
         $employees = Employee::factory()->count(2)->create();
         $employeeIds = $employees->pluck('id')->toArray();
 
@@ -283,7 +285,7 @@ class EmployeeBulkDeleteTest extends TestCase
     public function it_handles_duplicate_employee_ids()
     {
         $this->authenticatedUser();
-        
+
         $employee = Employee::factory()->create();
         $duplicateIds = [$employee->id, $employee->id, $employee->id];
 
@@ -302,7 +304,7 @@ class EmployeeBulkDeleteTest extends TestCase
     public function it_deletes_maximum_allowed_employees()
     {
         $this->authenticatedUser();
-        
+
         $employees = Employee::factory()->count(100)->create();
         $employeeIds = $employees->pluck('id')->toArray();
 
@@ -322,7 +324,7 @@ class EmployeeBulkDeleteTest extends TestCase
     public function it_deletes_employees_completely_with_all_data()
     {
         $this->authenticatedUser();
-        
+
         $employees = Employee::factory()->count(3)->create([
             'full_name' => 'Test Employee',
             'email' => function () {

@@ -1,5 +1,7 @@
 <?php
-
+/*
+ * Copyright (c) 2025 Adam Gąsowski
+ */
 namespace Tests\Feature;
 
 use App\Models\Employee;
@@ -159,7 +161,7 @@ class EmployeeStoreTest extends TestCase
     public function it_validates_email_uniqueness()
     {
         $this->authenticatedUser();
-        
+
         Employee::factory()->create(['email' => 'existing@example.com']);
 
         $employeeData = [

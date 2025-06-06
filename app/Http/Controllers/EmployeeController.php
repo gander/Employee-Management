@@ -1,4 +1,6 @@
-<?php
+<?php/*
+ * Copyright (c) 2025 Adam Gąsowski
+ */
 
 namespace App\Http\Controllers;
 
@@ -15,11 +17,11 @@ class EmployeeController extends Controller
 {
     /**
      * @group Employees
-     * 
+     *
      * List employees
-     * 
+     *
      * Returns a paginated list of all employees with filtering and sorting capabilities.
-     * 
+     *
      * @queryParam filter[full_name] string Filter by full name. Example: John Doe
      * @queryParam filter[email] string Filter by email address. Example: john@example.com
      * @queryParam filter[position] string Filter by position. Example: front-end
@@ -27,7 +29,7 @@ class EmployeeController extends Controller
      * @queryParam sort string Sort results. Available fields: full_name, email, position, created_at. Example: -created_at
      * @queryParam page[number] integer Page number. Example: 1
      * @queryParam page[size] integer Items per page (max 100). Example: 15
-     * 
+     *
      * @response 200 scenario="success" {
      *   "data": [
      *     {
@@ -63,14 +65,14 @@ class EmployeeController extends Controller
         return QueryBuilder::for(Employee::class)
             ->allowedFilters([
                 'full_name',
-                'email', 
+                'email',
                 'position',
                 'is_active'
             ])
             ->allowedSorts([
                 'full_name',
                 'email',
-                'position', 
+                'position',
                 'created_at'
             ])
             ->select([
@@ -89,13 +91,13 @@ class EmployeeController extends Controller
 
     /**
      * @group Employees
-     * 
+     *
      * Create new employee
-     * 
+     *
      * Creates a new employee with complete address information. Handles both residential and correspondence addresses in a single request.
-     * 
+     *
      * @authenticated
-     * 
+     *
      * @bodyParam full_name string required Employee's full name. Example: John Doe
      * @bodyParam email string required Employee's email address (must be unique). Example: john.doe@example.com
      * @bodyParam phone string optional Employee's phone number. Example: +48123456789
@@ -114,7 +116,7 @@ class EmployeeController extends Controller
      * @bodyParam correspondence_address_house_number string optional Correspondence address house number (required if different_correspondence_address is true). Example: 22
      * @bodyParam correspondence_address_apartment_number string optional Correspondence address apartment number. Example: 10
      * @bodyParam is_active boolean optional Whether employee is active (defaults to false). Example: true
-     * 
+     *
      * @response 201 scenario="success" {
      *   "message": "Employee created successfully",
      *   "employee": {
@@ -140,7 +142,7 @@ class EmployeeController extends Controller
      *     "updated_at": "2024-01-01T00:00:00.000000Z"
      *   }
      * }
-     * 
+     *
      * @response 422 scenario="validation error" {
      *   "message": "The given data was invalid.",
      *   "errors": {
@@ -165,15 +167,15 @@ class EmployeeController extends Controller
 
     /**
      * @group Employees
-     * 
+     *
      * Show employee details
-     * 
+     *
      * Returns detailed information about a specific employee including all address data.
-     * 
+     *
      * @authenticated
-     * 
+     *
      * @urlParam employee integer required Employee ID. Example: 1
-     * 
+     *
      * @response 200 scenario="success" {
      *   "employee": {
      *     "id": 1,
@@ -198,7 +200,7 @@ class EmployeeController extends Controller
      *     "updated_at": "2024-01-01T00:00:00.000000Z"
      *   }
      * }
-     * 
+     *
      * @response 404 scenario="employee not found" {
      *   "message": "Employee not found"
      * }
@@ -206,7 +208,7 @@ class EmployeeController extends Controller
     public function show(string $id): JsonResponse
     {
         $employee = Employee::find($id);
-        
+
         if (!$employee) {
             return response()->json([
                 'message' => 'Employee not found'
@@ -220,13 +222,13 @@ class EmployeeController extends Controller
 
     /**
      * @group Employees
-     * 
+     *
      * Update employee
-     * 
+     *
      * Updates an existing employee with address information. All fields are optional - only provided fields will be updated.
-     * 
+     *
      * @authenticated
-     * 
+     *
      * @urlParam employee integer required Employee ID. Example: 1
      * @bodyParam full_name string optional Employee's full name. Example: John Doe Updated
      * @bodyParam email string optional Employee's email address (must be unique). Example: john.updated@example.com
@@ -246,7 +248,7 @@ class EmployeeController extends Controller
      * @bodyParam correspondence_address_house_number string optional Correspondence address house number (required if different_correspondence_address is true). Example: 15
      * @bodyParam correspondence_address_apartment_number string optional Correspondence address apartment number. Example: 3
      * @bodyParam is_active boolean optional Whether employee is active. Example: true
-     * 
+     *
      * @response 200 scenario="success" {
      *   "message": "Employee updated successfully",
      *   "employee": {
@@ -272,11 +274,11 @@ class EmployeeController extends Controller
      *     "updated_at": "2024-01-01T12:00:00.000000Z"
      *   }
      * }
-     * 
+     *
      * @response 404 scenario="employee not found" {
      *   "message": "Employee not found"
      * }
-     * 
+     *
      * @response 422 scenario="validation error" {
      *   "message": "The given data was invalid.",
      *   "errors": {
@@ -288,7 +290,7 @@ class EmployeeController extends Controller
     public function update(UpdateEmployeeRequest $request, string $id): JsonResponse
     {
         $employee = Employee::find($id);
-        
+
         if (!$employee) {
             return response()->json([
                 'message' => 'Employee not found'
@@ -296,14 +298,14 @@ class EmployeeController extends Controller
         }
 
         $validatedData = $request->validated();
-        
+
         // Hash password if provided
         if (isset($validatedData['password'])) {
             $validatedData['password'] = Hash::make($validatedData['password']);
         }
-        
+
         // Clear correspondence address fields if different_correspondence_address is set to false
-        if (isset($validatedData['different_correspondence_address']) && 
+        if (isset($validatedData['different_correspondence_address']) &&
             $validatedData['different_correspondence_address'] === false) {
             $validatedData['correspondence_address_country'] = null;
             $validatedData['correspondence_address_postal_code'] = null;
@@ -322,19 +324,19 @@ class EmployeeController extends Controller
 
     /**
      * @group Employees
-     * 
+     *
      * Delete employee
-     * 
+     *
      * Deletes an employee and all associated address data permanently. This action cannot be undone.
-     * 
+     *
      * @authenticated
-     * 
+     *
      * @urlParam employee integer required Employee ID. Example: 1
-     * 
+     *
      * @response 200 scenario="success" {
      *   "message": "Employee deleted successfully"
      * }
-     * 
+     *
      * @response 404 scenario="employee not found" {
      *   "message": "Employee not found"
      * }
@@ -342,7 +344,7 @@ class EmployeeController extends Controller
     public function destroy(string $id): JsonResponse
     {
         $employee = Employee::find($id);
-        
+
         if (!$employee) {
             return response()->json([
                 'message' => 'Employee not found'
@@ -358,22 +360,22 @@ class EmployeeController extends Controller
 
     /**
      * @group Employees
-     * 
+     *
      * Bulk delete employees
-     * 
+     *
      * Deletes multiple employees and their associated address data based on provided employee IDs. Maximum 100 employees can be deleted at once.
-     * 
+     *
      * @authenticated
-     * 
+     *
      * @bodyParam employee_ids array required Array of employee IDs to delete (1-100 IDs). Example: [1, 2, 3]
      * @bodyParam employee_ids.* integer required Employee ID that exists in the database. Example: 1
-     * 
+     *
      * @response 200 scenario="success" {
      *   "message": "3 employees deleted successfully",
      *   "deleted_count": 3,
      *   "deleted_ids": [1, 2, 3]
      * }
-     * 
+     *
      * @response 422 scenario="validation error" {
      *   "message": "The given data was invalid.",
      *   "errors": {
@@ -385,17 +387,17 @@ class EmployeeController extends Controller
     public function bulkDestroy(BulkDeleteEmployeesRequest $request): JsonResponse
     {
         $employeeIds = $request->validated()['employee_ids'];
-        
+
         // Get existing employees to ensure we only delete what exists
         $existingEmployees = Employee::whereIn('id', $employeeIds)->pluck('id')->toArray();
-        
+
         // Filter original IDs to keep only existing ones in original order and remove duplicates
         $uniqueEmployeeIds = array_unique($employeeIds);
         $orderedExistingIds = array_values(array_intersect($uniqueEmployeeIds, $existingEmployees));
-        
+
         // Delete the employees
         $deletedCount = Employee::whereIn('id', $existingEmployees)->delete();
-        
+
         return response()->json([
             'message' => "{$deletedCount} employees deleted successfully",
             'deleted_count' => $deletedCount,

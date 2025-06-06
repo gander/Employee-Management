@@ -1,4 +1,6 @@
-<?php
+<?php/*
+ * Copyright (c) 2025 Adam Gąsowski
+ */
 
 namespace App\Providers;
 

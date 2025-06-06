@@ -1,5 +1,7 @@
 <?php
-
+/*
+ * Copyright (c) 2025 Adam Gąsowski
+ */
 namespace Tests\Feature;
 
 use App\Models\Employee;
@@ -209,7 +211,7 @@ class AuthPasswordResetTest extends TestCase
         ]);
 
         $token = 'test-token';
-        
+
         // Create an expired token (older than 60 minutes)
         $expiredTime = now()->subMinutes(61);
         DB::table('password_reset_tokens')->insert([
@@ -352,7 +354,7 @@ class AuthPasswordResetTest extends TestCase
         ]);
 
         $plainToken = $response->json('token');
-        
+
         $tokenRecord = DB::table('password_reset_tokens')
             ->where('email', 'john@example.com')
             ->first();
