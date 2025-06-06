@@ -163,11 +163,58 @@ class EmployeeController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @group Employees
+     * 
+     * Show employee details
+     * 
+     * Returns detailed information about a specific employee including all address data.
+     * 
+     * @authenticated
+     * 
+     * @urlParam employee integer required Employee ID. Example: 1
+     * 
+     * @response 200 scenario="success" {
+     *   "employee": {
+     *     "id": 1,
+     *     "full_name": "John Doe",
+     *     "email": "john.doe@example.com",
+     *     "phone": "+48123456789",
+     *     "position": "front-end",
+     *     "average_annual_salary": "75000.50",
+     *     "residential_address_country": "Poland",
+     *     "residential_address_postal_code": "00-123",
+     *     "residential_address_city": "Warsaw",
+     *     "residential_address_house_number": "15A",
+     *     "residential_address_apartment_number": "5",
+     *     "different_correspondence_address": true,
+     *     "correspondence_address_country": "Germany",
+     *     "correspondence_address_postal_code": "10115",
+     *     "correspondence_address_city": "Berlin",
+     *     "correspondence_address_house_number": "22",
+     *     "correspondence_address_apartment_number": "10",
+     *     "is_active": true,
+     *     "created_at": "2024-01-01T00:00:00.000000Z",
+     *     "updated_at": "2024-01-01T00:00:00.000000Z"
+     *   }
+     * }
+     * 
+     * @response 404 scenario="employee not found" {
+     *   "message": "Employee not found"
+     * }
      */
-    public function show(string $id)
+    public function show(string $id): JsonResponse
     {
-        //
+        $employee = Employee::find($id);
+        
+        if (!$employee) {
+            return response()->json([
+                'message' => 'Employee not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'employee' => $employee
+        ]);
     }
 
     /**

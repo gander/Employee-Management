@@ -11,6 +11,7 @@ Route::post('/auth/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/employees', [EmployeeController::class, 'store']);
+    Route::get('/employees/{employee}', [EmployeeController::class, 'show']);
     Route::put('/employees/{employee}', [EmployeeController::class, 'update']);
     
     Route::get('/me', function (Request $request) {
