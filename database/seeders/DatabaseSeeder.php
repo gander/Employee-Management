@@ -16,8 +16,19 @@ class DatabaseSeeder extends Seeder
         // Employee::factory(10)->create();
 
         Employee::factory()->create([
-            'full_name' => 'Test Employee',
-            'email' => 'test@example.com',
+            'full_name' => 'Active Employee',
+            'email' => 'active@example.com',
+            'password' => bcrypt('password123'),
+            'is_active' => true,
+            'position' => 'front-end',
+        ]);
+
+        Employee::factory()->create([
+            'full_name' => 'Inactive Employee',
+            'email' => 'inactive@example.com',
+            'password' => bcrypt('password123'),
+            'is_active' => false,
+            'position' => 'back-end',
         ]);
     }
 }
