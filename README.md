@@ -66,10 +66,16 @@ composer install
 ./vendor/bin/sail artisan scribe:generate
 ```
 
-## API Documentation
+## Dokumentacja
 
-After running `scribe:generate`, documentation will be available at:
+### API Documentation (Automatyczna - Scribe)
+Po uruchomieniu `scribe:generate`, interaktywna dokumentacja będzie dostępna pod:
 - **URL**: `http://localhost/docs`
+
+### Dodatkowa Dokumentacja
+- **[TESTING.md](TESTING.md)** - Kompletny przewodnik testowania (PHPUnit, Postman, cURL)
+- **[POSTMAN_GUIDE.md](POSTMAN_GUIDE.md)** - Szczegółowy przewodnik użycia kolekcji Postman
+- **[API_DOCUMENTATION.md](API_DOCUMENTATION.md)** - Pełna dokumentacja API z przykładami
 
 ## Test Accounts
 
