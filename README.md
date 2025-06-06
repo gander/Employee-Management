@@ -353,4 +353,17 @@ chmod -R 775 storage bootstrap/cache
 
 ## License
 
-This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This code is provided for **demonstration and testing purposes only**. 
+
+**Permitted uses:**
+- View and examine the code
+- Run and test the application locally
+- Use for educational purposes
+
+**Prohibited uses:**
+- Use in commercial projects
+- Redistribute or share the code
+- Modify and use in your own projects
+- Create derivative works
+
+**All rights reserved.** This software is provided without any license for commercial or production use.
