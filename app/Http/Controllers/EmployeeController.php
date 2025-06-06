@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BulkDeleteEmployeesRequest;
 use App\Http\Requests\StoreEmployeeRequest;
 use App\Http\Requests\UpdateEmployeeRequest;
 use App\Models\Employee;
@@ -352,6 +353,53 @@ class EmployeeController extends Controller
 
         return response()->json([
             'message' => 'Employee deleted successfully'
+        ]);
+    }
+
+    /**
+     * @group Employees
+     * 
+     * Bulk delete employees
+     * 
+     * Deletes multiple employees and their associated address data based on provided employee IDs. Maximum 100 employees can be deleted at once.
+     * 
+     * @authenticated
+     * 
+     * @bodyParam employee_ids array required Array of employee IDs to delete (1-100 IDs). Example: [1, 2, 3]
+     * @bodyParam employee_ids.* integer required Employee ID that exists in the database. Example: 1
+     * 
+     * @response 200 scenario="success" {
+     *   "message": "3 employees deleted successfully",
+     *   "deleted_count": 3,
+     *   "deleted_ids": [1, 2, 3]
+     * }
+     * 
+     * @response 422 scenario="validation error" {
+     *   "message": "The given data was invalid.",
+     *   "errors": {
+     *     "employee_ids": ["Employee IDs are required."],
+     *     "employee_ids.0": ["One or more employee IDs do not exist."]
+     *   }
+     * }
+     */
+    public function bulkDestroy(BulkDeleteEmployeesRequest $request): JsonResponse
+    {
+        $employeeIds = $request->validated()['employee_ids'];
+        
+        // Get existing employees to ensure we only delete what exists
+        $existingEmployees = Employee::whereIn('id', $employeeIds)->pluck('id')->toArray();
+        
+        // Filter original IDs to keep only existing ones in original order and remove duplicates
+        $uniqueEmployeeIds = array_unique($employeeIds);
+        $orderedExistingIds = array_values(array_intersect($uniqueEmployeeIds, $existingEmployees));
+        
+        // Delete the employees
+        $deletedCount = Employee::whereIn('id', $existingEmployees)->delete();
+        
+        return response()->json([
+            'message' => "{$deletedCount} employees deleted successfully",
+            'deleted_count' => $deletedCount,
+            'deleted_ids' => $orderedExistingIds
         ]);
     }
 }
