@@ -1,0 +1,879 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+		"name": "Employee Management API",
+		"description": "Complete test collection for Employee Management API with authentication, CRUD operations, filtering, sorting, and pagination.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login - Active Employee",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has token\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('token');",
+									"    pm.environment.set('token', jsonData.token);",
+									"});",
+									"",
+									"pm.test(\"Response has employee data\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('employee');",
+									"    pm.expect(jsonData.employee).to.have.property('email', 'active@example.com');",
+									"    pm.expect(jsonData.employee).to.have.property('is_active', true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"active@example.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					}
+				},
+				{
+					"name": "Login - Inactive Employee (Should Fail)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"",
+									"pm.test(\"Error message for inactive account\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('inactive');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"inactive@example.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					}
+				},
+				{
+					"name": "Login - Invalid Credentials",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"",
+									"pm.test(\"Error message for invalid credentials\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.eql('Invalid credentials');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"active@example.com\",\n  \"password\": \"wrongpassword\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					}
+				},
+				{
+					"name": "Login - Validation Error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {",
+									"    pm.response.to.have.status(422);",
+									"});",
+									"",
+									"pm.test(\"Validation errors present\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('errors');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"invalid-email\",\n  \"password\": \"123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Employee Listing (Public)",
+			"item": [
+				{
+					"name": "Get All Employees",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has data array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('data');",
+									"    pm.expect(jsonData.data).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Employee has required fields\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.data.length > 0) {",
+									"        var employee = jsonData.data[0];",
+									"        pm.expect(employee).to.have.property('id');",
+									"        pm.expect(employee).to.have.property('full_name');",
+									"        pm.expect(employee).to.have.property('email');",
+									"        pm.expect(employee).to.have.property('position');",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/employees",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employees"
+							]
+						}
+					}
+				},
+				{
+					"name": "Filter by Position",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Filtered results contain only front-end positions\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    jsonData.data.forEach(function(employee) {",
+									"        pm.expect(employee.position).to.eql('front-end');",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/employees?filter[position]=front-end",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employees"
+							],
+							"query": [
+								{
+									"key": "filter[position]",
+									"value": "front-end"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Filter by Active Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Filtered results contain only active employees\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    jsonData.data.forEach(function(employee) {",
+									"        pm.expect(employee.is_active).to.eql(true);",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/employees?filter[is_active]=true",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employees"
+							],
+							"query": [
+								{
+									"key": "filter[is_active]",
+									"value": "true"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Sort by Name Ascending",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Results are sorted by name\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.data.length > 1) {",
+									"        for (let i = 1; i < jsonData.data.length; i++) {",
+									"            pm.expect(jsonData.data[i].full_name.toLowerCase()).to.be.at.least(jsonData.data[i-1].full_name.toLowerCase());",
+									"        }",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/employees?sort=full_name",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employees"
+							],
+							"query": [
+								{
+									"key": "sort",
+									"value": "full_name"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Pagination Test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Pagination returns correct number of items\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.length).to.be.at.most(5);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/employees?page[size]=5&page[number]=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employees"
+							],
+							"query": [
+								{
+									"key": "page[size]",
+									"value": "5"
+								},
+								{
+									"key": "page[number]",
+									"value": "1"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Employee Management (Protected)",
+			"item": [
+				{
+					"name": "Create Employee - Same Addresses",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Employee created successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.eql('Employee created successfully');",
+									"    pm.expect(jsonData.employee).to.have.property('id');",
+									"    pm.environment.set('created_employee_id', jsonData.employee.id);",
+									"});",
+									"",
+									"pm.test(\"Employee has correct data\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.employee.full_name).to.eql('Jane Smith');",
+									"    pm.expect(jsonData.employee.email).to.eql('jane.smith@example.com');",
+									"    pm.expect(jsonData.employee.position).to.eql('designer');",
+									"    pm.expect(jsonData.employee.different_correspondence_address).to.eql(false);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"full_name\": \"Jane Smith\",\n  \"email\": \"jane.smith@example.com\",\n  \"phone\": \"+48123456789\",\n  \"position\": \"designer\",\n  \"password\": \"password123\",\n  \"residential_address_country\": \"Poland\",\n  \"residential_address_postal_code\": \"00-001\",\n  \"residential_address_city\": \"Krakow\",\n  \"residential_address_house_number\": \"10\",\n  \"residential_address_apartment_number\": \"5\",\n  \"different_correspondence_address\": false,\n  \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/employees",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employees"
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Employee - Different Addresses",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Employee created with different addresses\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.employee.different_correspondence_address).to.eql(true);",
+									"    pm.expect(jsonData.employee.correspondence_address_country).to.eql('Germany');",
+									"    pm.environment.set('created_employee_id_2', jsonData.employee.id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"full_name\": \"John Wilson\",\n  \"email\": \"john.wilson@example.com\",\n  \"position\": \"back-end\",\n  \"password\": \"password123\",\n  \"average_annual_salary\": 85000.50,\n  \"residential_address_country\": \"Poland\",\n  \"residential_address_postal_code\": \"00-123\",\n  \"residential_address_city\": \"Warsaw\",\n  \"residential_address_house_number\": \"15A\",\n  \"different_correspondence_address\": true,\n  \"correspondence_address_country\": \"Germany\",\n  \"correspondence_address_postal_code\": \"10115\",\n  \"correspondence_address_city\": \"Berlin\",\n  \"correspondence_address_house_number\": \"22\",\n  \"correspondence_address_apartment_number\": \"10\",\n  \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/employees",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employees"
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Employee - Validation Error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {",
+									"    pm.response.to.have.status(422);",
+									"});",
+									"",
+									"pm.test(\"Validation errors present\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('errors');",
+									"    pm.expect(jsonData.errors).to.have.property('email');",
+									"    pm.expect(jsonData.errors).to.have.property('position');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"full_name\": \"Invalid Employee\",\n  \"email\": \"invalid-email\",\n  \"position\": \"invalid-position\",\n  \"password\": \"password123\",\n  \"residential_address_country\": \"Poland\",\n  \"residential_address_postal_code\": \"00-123\",\n  \"residential_address_city\": \"Warsaw\",\n  \"residential_address_house_number\": \"15A\",\n  \"different_correspondence_address\": false\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/employees",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employees"
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Employee - Partial",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Employee updated successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.eql('Employee updated successfully');",
+									"    pm.expect(jsonData.employee.position).to.eql('pm');",
+									"    pm.expect(jsonData.employee.average_annual_salary).to.eql('90000.00');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"position\": \"pm\",\n  \"average_annual_salary\": 90000.00\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/employees/{{created_employee_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employees",
+								"{{created_employee_id}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Employee - Change Addresses",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Address updated successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.employee.different_correspondence_address).to.eql(false);",
+									"    pm.expect(jsonData.employee.correspondence_address_country).to.eql(null);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"residential_address_city\": \"Berlin\",\n  \"different_correspondence_address\": false\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/employees/{{created_employee_id_2}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employees",
+								"{{created_employee_id_2}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Employee - Not Found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Error message for not found\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.eql('Employee not found');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"full_name\": \"Updated Name\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/employees/99999",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employees",
+								"99999"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Authentication Tests",
+			"item": [
+				{
+					"name": "Get Current User Info",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"User info returned\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('email', 'active@example.com');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/me",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"me"
+							]
+						}
+					}
+				},
+				{
+					"name": "Access Protected Route Without Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"full_name\": \"Unauthorized Test\",\n  \"email\": \"test@example.com\",\n  \"position\": \"tester\",\n  \"password\": \"password123\",\n  \"residential_address_country\": \"Poland\",\n  \"residential_address_postal_code\": \"00-123\",\n  \"residential_address_city\": \"Warsaw\",\n  \"residential_address_house_number\": \"15A\",\n  \"different_correspondence_address\": false\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/employees",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employees"
+							]
+						}
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost/api",
+			"type": "string"
+		}
+	]
+}

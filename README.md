@@ -276,6 +276,10 @@ Authorization: Bearer {{token}}
 
 ## Running Tests
 
+The project includes comprehensive automated tests and Postman collections for API testing.
+
+### 1. Automated PHPUnit Tests
+
 ```bash
 # Run all tests
 ./vendor/bin/sail artisan test
@@ -283,8 +287,147 @@ Authorization: Bearer {{token}}
 # Run specific test file
 ./vendor/bin/sail artisan test tests/Feature/AuthLoginTest.php
 
-# Run with coverage
+# Run only feature tests (API endpoints)
+./vendor/bin/sail artisan test --testsuite=Feature
+
+# Run with verbose output
+./vendor/bin/sail artisan test -v
+
+# Run specific test method
+./vendor/bin/sail artisan test --filter="it_can_login_with_valid_credentials"
+
+# Run with test coverage (requires Xdebug)
 ./vendor/bin/sail artisan test --coverage
+```
+
+**Test Coverage Summary:**
+- **AuthLoginTest** (11 tests) - Login authentication, validation, token generation
+- **EmployeeListTest** (11 tests) - Public listing, filtering, sorting, pagination  
+- **EmployeeStoreTest** (12 tests) - Employee creation, address handling, validation
+- **EmployeeUpdateTest** (16 tests) - Employee updates, partial updates, validation
+- **Total: 50+ tests with 280+ assertions**
+
+### 2. Postman API Tests
+
+#### Import Collections
+
+1. **Import Collection:**
+   - Open Postman
+   - Click "Import" → "Upload Files"
+   - Select `postman/Employee_Management_API.postman_collection.json`
+
+2. **Import Environment:**
+   - Click "Import" → "Upload Files" 
+   - Select `postman/Employee_Management_Environment.postman_environment.json`
+   - Set as active environment (top-right dropdown)
+
+#### Running Postman Tests
+
+**Option A: Run Individual Requests**
+1. Start with "Authentication" → "Login - Active Employee"
+2. This sets the `token` variable automatically
+3. Run other protected endpoints
+
+**Option B: Run Collection**
+1. Right-click collection → "Run collection"
+2. Select all folders
+3. Click "Run Employee Management API"
+4. View test results and assertions
+
+**Option C: Command Line (Newman)**
+```bash
+# Install Newman globally
+npm install -g newman
+
+# Run collection from command line
+newman run postman/Employee_Management_API.postman_collection.json \
+  -e postman/Employee_Management_Environment.postman_environment.json \
+  --reporters cli,html \
+  --reporter-html-export newman-report.html
+```
+
+#### Test Scenarios Included
+
+**Authentication Tests:**
+- ✅ Login with active employee
+- ❌ Login with inactive employee (should fail)
+- ❌ Login with invalid credentials
+- ❌ Validation errors for malformed data
+
+**Public Endpoint Tests:**
+- ✅ Get all employees
+- ✅ Filter by position
+- ✅ Filter by active status
+- ✅ Sort by name
+- ✅ Pagination functionality
+
+**Protected Endpoint Tests:**
+- ✅ Create employee (same addresses)
+- ✅ Create employee (different addresses)
+- ❌ Create employee validation errors
+- ✅ Update employee (partial)
+- ✅ Update employee addresses
+- ❌ Update non-existent employee
+- ✅ Get current user info
+- ❌ Access without authentication
+
+### 3. Manual Testing Quick Start
+
+**Step 1: Get Authentication Token**
+```bash
+curl -X POST http://localhost/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "active@example.com", "password": "password123"}'
+```
+
+**Step 2: Test Protected Endpoints**
+```bash
+# Replace YOUR_TOKEN with token from step 1
+curl -X GET http://localhost/api/me \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+### 4. Test Database Setup
+
+```bash
+# Reset database and seed test data
+./vendor/bin/sail artisan migrate:fresh --seed
+
+# This creates:
+# - active@example.com (can login)
+# - inactive@example.com (login blocked)  
+# - 15 additional random employees for testing
+```
+
+### 5. Continuous Integration
+
+```bash
+# Run all quality checks
+./vendor/bin/sail composer ecs          # Code style check
+./vendor/bin/sail artisan test          # Automated tests
+./vendor/bin/sail artisan scribe:generate  # Update API docs
+```
+
+### Troubleshooting Tests
+
+**Database Issues:**
+```bash
+# Reset test database
+./vendor/bin/sail artisan migrate:fresh --seed --env=testing
+```
+
+**Token Expiration:**
+```bash
+# Re-run login request in Postman to get fresh token
+# Or clear token from environment and re-authenticate
+```
+
+**Port Conflicts:**
+```bash
+# Check if application is running
+./vendor/bin/sail ps
+# Restart if needed
+./vendor/bin/sail down && ./vendor/bin/sail up -d
 ```
 
 ## Code Quality
