@@ -13,8 +13,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Employee::factory(10)->create();
-
         Employee::factory()->create([
             'full_name' => 'Active Employee',
             'email' => 'active@example.com',
@@ -30,5 +28,8 @@ class DatabaseSeeder extends Seeder
             'is_active' => false,
             'position' => 'back-end',
         ]);
+
+        // Create additional test employees for demonstration
+        Employee::factory(15)->create();
     }
 }
