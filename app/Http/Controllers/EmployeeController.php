@@ -320,10 +320,38 @@ class EmployeeController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @group Employees
+     * 
+     * Delete employee
+     * 
+     * Deletes an employee and all associated address data permanently. This action cannot be undone.
+     * 
+     * @authenticated
+     * 
+     * @urlParam employee integer required Employee ID. Example: 1
+     * 
+     * @response 200 scenario="success" {
+     *   "message": "Employee deleted successfully"
+     * }
+     * 
+     * @response 404 scenario="employee not found" {
+     *   "message": "Employee not found"
+     * }
      */
-    public function destroy(string $id)
+    public function destroy(string $id): JsonResponse
     {
-        //
+        $employee = Employee::find($id);
+        
+        if (!$employee) {
+            return response()->json([
+                'message' => 'Employee not found'
+            ], 404);
+        }
+
+        $employee->delete();
+
+        return response()->json([
+            'message' => 'Employee deleted successfully'
+        ]);
     }
 }
