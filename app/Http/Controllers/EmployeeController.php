@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreEmployeeRequest;
+use App\Http\Requests\UpdateEmployeeRequest;
 use App\Models\Employee;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -170,11 +171,105 @@ class EmployeeController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * @group Employees
+     * 
+     * Update employee
+     * 
+     * Updates an existing employee with address information. All fields are optional - only provided fields will be updated.
+     * 
+     * @authenticated
+     * 
+     * @urlParam employee integer required Employee ID. Example: 1
+     * @bodyParam full_name string optional Employee's full name. Example: John Doe Updated
+     * @bodyParam email string optional Employee's email address (must be unique). Example: john.updated@example.com
+     * @bodyParam phone string optional Employee's phone number. Example: +48987654321
+     * @bodyParam average_annual_salary number optional Employee's annual salary. Example: 85000.00
+     * @bodyParam position string optional Employee's position. Must be one of: front-end, back-end, pm, designer, tester. Example: back-end
+     * @bodyParam password string optional Employee's password (minimum 6 characters). Example: newpassword123
+     * @bodyParam residential_address_country string optional Residential address country. Example: Germany
+     * @bodyParam residential_address_postal_code string optional Residential address postal code. Example: 10115
+     * @bodyParam residential_address_city string optional Residential address city. Example: Berlin
+     * @bodyParam residential_address_house_number string optional Residential address house number. Example: 22A
+     * @bodyParam residential_address_apartment_number string optional Residential address apartment number. Example: 8
+     * @bodyParam different_correspondence_address boolean optional Whether correspondence address is different from residential. Example: false
+     * @bodyParam correspondence_address_country string optional Correspondence address country (required if different_correspondence_address is true). Example: France
+     * @bodyParam correspondence_address_postal_code string optional Correspondence address postal code (required if different_correspondence_address is true). Example: 75001
+     * @bodyParam correspondence_address_city string optional Correspondence address city (required if different_correspondence_address is true). Example: Paris
+     * @bodyParam correspondence_address_house_number string optional Correspondence address house number (required if different_correspondence_address is true). Example: 15
+     * @bodyParam correspondence_address_apartment_number string optional Correspondence address apartment number. Example: 3
+     * @bodyParam is_active boolean optional Whether employee is active. Example: true
+     * 
+     * @response 200 scenario="success" {
+     *   "message": "Employee updated successfully",
+     *   "employee": {
+     *     "id": 1,
+     *     "full_name": "John Doe Updated",
+     *     "email": "john.updated@example.com",
+     *     "phone": "+48987654321",
+     *     "position": "back-end",
+     *     "average_annual_salary": "85000.00",
+     *     "residential_address_country": "Germany",
+     *     "residential_address_postal_code": "10115",
+     *     "residential_address_city": "Berlin",
+     *     "residential_address_house_number": "22A",
+     *     "residential_address_apartment_number": "8",
+     *     "different_correspondence_address": false,
+     *     "correspondence_address_country": null,
+     *     "correspondence_address_postal_code": null,
+     *     "correspondence_address_city": null,
+     *     "correspondence_address_house_number": null,
+     *     "correspondence_address_apartment_number": null,
+     *     "is_active": true,
+     *     "created_at": "2024-01-01T00:00:00.000000Z",
+     *     "updated_at": "2024-01-01T12:00:00.000000Z"
+     *   }
+     * }
+     * 
+     * @response 404 scenario="employee not found" {
+     *   "message": "Employee not found"
+     * }
+     * 
+     * @response 422 scenario="validation error" {
+     *   "message": "The given data was invalid.",
+     *   "errors": {
+     *     "email": ["This email address is already registered."],
+     *     "position": ["Position must be one of: front-end, back-end, pm, designer, tester."]
+     *   }
+     * }
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateEmployeeRequest $request, string $id): JsonResponse
     {
-        //
+        $employee = Employee::find($id);
+        
+        if (!$employee) {
+            return response()->json([
+                'message' => 'Employee not found'
+            ], 404);
+        }
+
+        $validatedData = $request->validated();
+        
+        // Hash password if provided
+        if (isset($validatedData['password'])) {
+            $validatedData['password'] = Hash::make($validatedData['password']);
+        }
+        
+        // Clear correspondence address fields if different_correspondence_address is set to false
+        if (isset($validatedData['different_correspondence_address']) && 
+            $validatedData['different_correspondence_address'] === false) {
+            $validatedData['correspondence_address_country'] = null;
+            $validatedData['correspondence_address_postal_code'] = null;
+            $validatedData['correspondence_address_city'] = null;
+            $validatedData['correspondence_address_house_number'] = null;
+            $validatedData['correspondence_address_apartment_number'] = null;
+        }
+
+        $employee->update($validatedData);
+
+        return response()->json([
+            'message' => 'Employee updated successfully',
+            'employee' => $employee->fresh()
+        ]);
     }
 
     /**
