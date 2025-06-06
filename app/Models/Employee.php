@@ -8,9 +8,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class Employee extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<\Database\Factories\EmployeeFactory> */
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
@@ -69,7 +69,7 @@ class User extends Authenticatable
     {
         return [
             'full_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|unique:employees,email',
             'phone' => 'nullable|string|max:20',
             'average_annual_salary' => 'nullable|numeric|decimal:0,2',
             'position' => 'required|in:front-end,back-end,pm,designer,tester',
