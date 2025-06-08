@@ -1,8 +1,9 @@
-# Employee Management API
+# Employee Management
 
 RESTful API for managing employees with Laravel and Laravel Sanctum authentication.
 
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/gander/Employee-Management/laravel.yml?branch=master&style=flat&logo=laravel&logoColor=white&label=test)
+[![CC BY-NC-SA 4.0][cc-by-nc-sa-shield]][cc-by-nc-sa]
 
 ## Quick Start
 
@@ -116,6 +117,17 @@ curl -X GET http://localhost/api/me \
 # Check container status
 ./vendor/bin/sail ps
 ```
+
+## License
+
+All content in this repository is licensed under a
+[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+
+[![CC BY-NC-SA 4.0][cc-by-nc-sa-image]][cc-by-nc-sa]
+
+[cc-by-nc-sa]: http://creativecommons.org/licenses/by-nc-sa/4.0/
+[cc-by-nc-sa-image]: https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png
+[cc-by-nc-sa-shield]: https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg
 
 ## Architecture
 
