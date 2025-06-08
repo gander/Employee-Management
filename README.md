@@ -2,6 +2,8 @@
 
 RESTful API for managing employees with Laravel and Laravel Sanctum authentication.
 
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/gander/Employee-Management/laravel.yml?branch=master&style=flat&logo=laravel&logoColor=white&label=test)
+
 ## Quick Start
 
 ### 1. Setup
