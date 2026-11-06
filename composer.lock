@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "167325b1daf5ba74cff3e746ccf3a3d4",
+    "content-hash": "878b891ecad37a6887cef7e434d1f5ca",
     "packages": [
         {
             "name": "brick/math",
@@ -513,16 +513,16 @@
         },
         {
             "name": "fakerphp/faker",
-            "version": "v1.24.1",
+            "version": "v1.23.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FakerPHP/Faker.git",
-                "reference": "e0ee18eb1e6dc3cda3ce9fd97e5a0689a88a64b5"
+                "reference": "bfb4fe148adbf78eff521199619b93a52ae3554b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FakerPHP/Faker/zipball/e0ee18eb1e6dc3cda3ce9fd97e5a0689a88a64b5",
-                "reference": "e0ee18eb1e6dc3cda3ce9fd97e5a0689a88a64b5",
+                "url": "https://api.github.com/repos/FakerPHP/Faker/zipball/bfb4fe148adbf78eff521199619b93a52ae3554b",
+                "reference": "bfb4fe148adbf78eff521199619b93a52ae3554b",
                 "shasum": ""
             },
             "require": {
@@ -570,9 +570,10 @@
             ],
             "support": {
                 "issues": "https://github.com/FakerPHP/Faker/issues",
-                "source": "https://github.com/FakerPHP/Faker/tree/v1.24.1"
+                "source": "https://github.com/FakerPHP/Faker/tree/v1.23.1"
             },
-            "time": "2024-11-21T13:46:39+00:00"
+            "time": "2024-01-02T13:46:09+00:00",
+            "published-time": "2024-01-02T13:46:47+00:00"
         },
         {
             "name": "filp/whoops",
@@ -3214,7 +3215,8 @@
                 "issues": "https://github.com/php-fig/container/issues",
                 "source": "https://github.com/php-fig/container/tree/2.0.2"
             },
-            "time": "2021-11-05T16:47:00+00:00"
+            "time": "2021-11-05T16:47:00+00:00",
+            "published-time": "2021-11-05T16:53:27+00:00"
         },
         {
             "name": "psr/event-dispatcher",
@@ -4334,7 +4336,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-06-05T06:23:12+00:00"
+            "time": "2026-06-05T06:23:12+00:00",
+            "published-time": "2026-06-27T21:46:34+00:00"
         },
         {
             "name": "symfony/error-handler",
